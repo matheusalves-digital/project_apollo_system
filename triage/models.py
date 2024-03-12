@@ -1,9 +1,18 @@
 from django.db import models
 from users.models import User
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 class Triage(models.Model):
-    number_of_process = models.CharField(primary_key=True, max_length=20)
+    number_of_process = models.CharField(primary_key=True, 
+                                         max_length=25,
+                                         validators=[
+                                            RegexValidator(
+                                                regex=r'^\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}$',
+                                                message='O número do processo deve estar no formato ^\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}$',
+                                                code='invalid_number_of_process'
+                                            )
+                                         ])
     
     class TypeOfJustice(models.TextChoices):
         JEC = 'JEC'
@@ -37,6 +46,10 @@ class Triage(models.Model):
         QUOTE = 'CITAÇÃO / INTIMAÇÃO'
         ENFORCEMENT_OF_SENTENCE = 'CUMPRIMENTO DE SENTEÇA'
 
+    class ProceduralStage(models.TextChoices):
+        JOINED = 'INGRESSADOS'
+        LOOSE = 'AVULSO'
+
     arrival_date = models.DateField(null=False)
     arrival_time = models.TimeField(null=False)
     type_of_justice = models.CharField(choices=TypeOfJustice.choices, null=False)
@@ -44,9 +57,11 @@ class Triage(models.Model):
     date_time_of_treaty = models.DateTimeField(default=timezone.now, null=False)
     author = models.CharField(max_length=255, null=False)
     hearing_date = models.DateField(blank=True, null=True)
+    hearing_time = models.TimeField(null=False)
     preliminary_situation = models.CharField(choices=PreliminarySituation.choices, null=False)
+    procedural_stage = models.CharField(choices=ProceduralStage.choices, null=False)
     fatal_deadline = models.DateField(blank=True, null=True)
-    obligation_to_do = models.TextField(null=True, blank=True)
+    obligation_to_do = models.TextField(max_length=400, null=True, blank=True)
     traffic_ticket = models.BooleanField(null=False)
     value_of_the_fine = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     type_of_fine = models.CharField(choices=TypeOfFine.choices, max_length=255, null=True, blank=True)
@@ -55,10 +70,30 @@ class Triage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class RioDeJaneiro(Triage):
-    cpf_cnpj = models.CharField(max_length=20, null=True, blank=True)
+    cpf_cnpj = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$',
+                message='O CPF ou CNPJ deve estar no formato correto.',
+                code='invalid_cpf_cnpj'
+            )
+        ])
 
 class Ceara(Triage):
-    cpf_cnpj = models.CharField(max_length=20, null=True, blank=True)
+    cpf_cnpj = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$',
+                message='O CPF ou CNPJ deve estar no formato correto.',
+                code='invalid_cpf_cnpj'
+            )
+        ])
 
 class SaoPaulo(Triage):
     quantity = models.IntegerField(null=True, blank=True)
