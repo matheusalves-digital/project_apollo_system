@@ -57,7 +57,7 @@ class Triage(models.Model):
     date_time_of_treaty = models.DateTimeField(default=timezone.now, null=False)
     author = models.CharField(max_length=255, null=False)
     hearing_date = models.DateField(blank=True, null=True)
-    hearing_time = models.TimeField(null=False)
+    hearing_time = models.TimeField(blank=True, null=True)
     preliminary_situation = models.CharField(choices=PreliminarySituation.choices, null=False)
     procedural_stage = models.CharField(choices=ProceduralStage.choices, null=False)
     fatal_deadline = models.DateField(blank=True, null=True)
