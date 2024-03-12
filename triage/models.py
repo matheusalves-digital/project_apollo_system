@@ -70,10 +70,30 @@ class Triage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class RioDeJaneiro(Triage):
-    cpf_cnpj = models.CharField(max_length=20, null=True, blank=True)
+    cpf_cnpj = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$',
+                message='O CPF ou CNPJ deve estar no formato correto.',
+                code='invalid_cpf_cnpj'
+            )
+        ])
 
 class Ceara(Triage):
-    cpf_cnpj = models.CharField(max_length=20, null=True, blank=True)
+    cpf_cnpj = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$',
+                message='O CPF ou CNPJ deve estar no formato correto.',
+                code='invalid_cpf_cnpj'
+            )
+        ])
 
 class SaoPaulo(Triage):
     quantity = models.IntegerField(null=True, blank=True)
