@@ -4,13 +4,20 @@ import uuid
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from .manager import UserManager
+from django.core.validators import RegexValidator
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, null=False, blank=True)
     cpf = models.CharField(unique=True, max_length=11, null=False)
     first_name = models.CharField(max_length=100, null=False)
     last_name = models.CharField(max_length=100, null=False)
-    email = models.EmailField(unique=True, max_length=255, null=False)
+    
+    email_regex = RegexValidator(
+        regex=r' ?(\w+\.\w+@meirelesefreitas(?:\.adv\.br)+)',
+        message="O e-mail deve estar no formato nome.sobrenome@meirelesefreitas.adv.br",
+    )
+
+    email = models.EmailField(unique=True, max_length=255, null=False, validators=[email_regex])
 
     is_active = models.BooleanField(default=True)
 
