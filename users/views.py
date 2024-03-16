@@ -75,6 +75,8 @@ class TestAuthenticationView(GenericAPIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
+
+# add logout
 class LogoutUserView(GenericAPIView):
     serializer_class = LogoutUserSerializer
     permission_classes = [IsAuthenticated]
