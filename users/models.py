@@ -13,8 +13,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=100, null=False)
     
     email_regex = RegexValidator(
-        regex=r' ?(\w+\.\w+@meirelesefreitas(?:\.adv\.br)+)',
-        message="O e-mail deve estar no formato nome.sobrenome@meirelesefreitas.adv.br",
+        regex=r'^[\w\.-]+@meirelesefreitas(?:\.adv\.br)+$',
+        message="O e-mail deve estar no formato nomesobrenome@meirelesefreitas.adv.br",
     )
 
     email = models.EmailField(unique=True, max_length=255, null=False, validators=[email_regex])
