@@ -2,3 +2,7 @@
 /apollo_system_db.png
 /notebooks
 /virtualenvironmet
+users/__pycache__
+users/migrations
+triage/__pycache__
+triage/migrations
