@@ -23,7 +23,27 @@ FIELDS_RIODEJANEIRO_CEARA = [
 ]
 
 FIELDS_SAOPAULO = [
-
+    'number_of_process',
+    'arrival_date',
+    'arrival_time',
+    'type_of_justice',
+    'receive_by',
+    'author',
+    'hearing_date',
+    'hearing_time',
+    'preliminary_situation',
+    'procedural_stage',
+    'fatal_deadline',
+    'traffic_ticket',
+    'value_of_the_fine',
+    'type_of_fine',
+    'judicial_determination',
+    'obligation_to_do',
+    'quantity',
+    'stamp_date',
+    'internal_code',
+    'value_of_the_claim',
+    'user'
 ]
 
 class TriageSerializer(serializers.ModelSerializer):
@@ -44,4 +64,4 @@ class CearaSerializer(serializers.ModelSerializer):
 class SaoPauloSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaoPaulo
-        fields = '__all__'
+        fields = FIELDS_SAOPAULO
