@@ -69,6 +69,27 @@ class Triage(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def remaining_time(self):
+        now = timezone.now()
+
+        if self.fatal_deadline:
+            delta = self.fatal_deadline - now
+
+            if delta.total_seconds() < 0:
+                return 'Prazo fatal já passou'
+            else:
+                days = delta.days
+                hours, remainder = divmod(delta.seconds, 3600)
+                minutes, _ = divmod(remainder, 60)
+                
+                return f'{days}:{hours}:{minutes}'
+        else:
+            return None
+
+    def save(self, *args, **kwargs):
+        self.judicial_determination = self.remaining_time()
+        super().save(*args, **kwargs)
+
 class RioDeJaneiro(Triage):
     cpf_cnpj = models.CharField(
         max_length=20,

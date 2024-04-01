@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-=onshoa#s%x7ydxyjkvq-6(qi@n^sye&hx4c&r@jdp0391x%+5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.13.99', '192.168.0.138', '172.20.240.1', '179.156.170.171', '201.48.109.196', 'apollo2.loca.lt', 'apollo1.loca.lt', 'apollo.loca.lt']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.13.99', '192.168.0.138', '172.20.240.1', '179.156.170.171', '201.48.109.196', '191.247.11.155', 'apollo2.loca.lt', 'apollo1.loca.lt', 'apollo.loca.lt']
 
 # Application definition
 
@@ -102,6 +102,9 @@ DATABASES = {
         'PASSWORD': 'math@law',
         'HOST': 'localhost',
         'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        },
     }
 }
 
