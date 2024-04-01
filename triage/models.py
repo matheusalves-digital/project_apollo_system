@@ -65,12 +65,12 @@ class Triage(models.Model):
     traffic_ticket = models.BooleanField(null=False)
     value_of_the_fine = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     type_of_fine = models.CharField(choices=TypeOfFine.choices, max_length=255, null=True, blank=True)
-    judicial_determination = models.IntegerField(null=True, blank=True)
+    judicial_determination = models.CharField(max_length=255, null=True, blank=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def remaining_time(self):
-        now = timezone.now()
+        now = timezone.now().date()
 
         if self.fatal_deadline:
             delta = self.fatal_deadline - now
