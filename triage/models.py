@@ -82,7 +82,7 @@ class Triage(models.Model):
                 hours, remainder = divmod(delta.seconds, 3600)
                 minutes, _ = divmod(remainder, 60)
                 
-                return f'{days}:{hours}:{minutes}'
+                return f'{days} dia(s) :{hours} hora(s) :{minutes} minuto(s)'
         else:
             return None
 
