@@ -41,7 +41,7 @@ class TriageCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(user=user)
+        return serializer.save(user=user)
 
 class TriageListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
