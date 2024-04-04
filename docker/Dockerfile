@@ -1,26 +1,24 @@
 FROM python:3.12.1
 
-ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+COPY apollo_system_api /apollo_system_api
+COPY scripts /scripts
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /apollo_system_api
 
-COPY ../requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt \
-    && rm -rf /tmp/requirements.txt
+EXPOSE 8000
 
-RUN useradd -U app_user \
-    && install -d -m 0755 -o app_user -g app_user /app/static
+RUN python -m venv /venv && \
+  /venv/bin/pip install --upgrade pip && \
+  /venv/bin/pip install -r /apollo_system_api/requirements.txt &&\
+  adduser --disabled-password --no-create-home duser && \
+  chown -R duser:duser /venv && \
+  chmod -R +x /scripts
 
-WORKDIR /app
-USER app_user:app_user
+ENV PATH="/scripts:/venv/bin:$PATH"
 
-COPY --chown=app_user:app_user . .
+USER duser
 
-COPY docker/start.sh apollo_system_api/docker/start.sh
-
-RUN chmod +x docker/*.sh
+CMD ["commands.sh"]

@@ -1,32 +1,23 @@
 version: "3.12.1"
 
-volumes:
-    app_data:
-        name: app_data
-    app_broker:
-        name: app_broker
-
 services:
-    django:
-        image: apollo_system_api:development
-        command: /bin/sh -c "apollo_system_api/docker/start.sh"
-        depends_on:
-            - postgres
-        healthcheck:
-            test: ["CMD", "pg_isready", "-h", "postgres", "-p", "5432"]
-            interval: 5s
-            timeout: 10s
-            retries: 5
-        env_file:
-            - .env
+    apollo_system_api:
+        container_name: apollo_system_api
+        build:
+            context: .
         ports:
             - 8000:8000
+        volumes:
+            - ./apollo_system_api:/apollo_system_api
+        env_file:
+            - ./dotenv_files/.env
+        depends_on:
+            - db_apollo
 
-    postgres:
+    db_apollo:
+        container_name: db_apollo
         image: postgres:16.1
         volumes:
-            - app_data:/var/lib/postgresql/data
-        environment:
-            POSTGRES_PASSWORD: math@law
-            POSTGRES_USER: postgres
-            POSTGRES_DB: apollo_api
+            - ./data/postgres/data:/var/lib/postgresql/data/
+        env_file:
+            - ./dotenv_files/.env
