@@ -1,0 +1,23 @@
+version: "3.12.1"
+
+services:
+    apollo_system_api:
+        container_name: apollo_system_api
+        build:
+            context: .
+        ports:
+            - 8000:8000
+        volumes:
+            - ./apollo_system_api:/apollo_system_api
+        env_file:
+            - ./dotenv_files/.env
+        depends_on:
+            - db_apollo
+
+    db_apollo:
+        container_name: db_apollo
+        image: postgres:16.1
+        volumes:
+            - ./data/postgres/data:/var/lib/postgresql/data/
+        env_file:
+            - ./dotenv_files/.env

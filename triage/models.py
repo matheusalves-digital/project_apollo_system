@@ -65,9 +65,30 @@ class Triage(models.Model):
     traffic_ticket = models.BooleanField(null=False)
     value_of_the_fine = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     type_of_fine = models.CharField(choices=TypeOfFine.choices, max_length=255, null=True, blank=True)
-    judicial_determination = models.IntegerField(null=True, blank=True)
+    judicial_determination = models.CharField(max_length=255, null=True, blank=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def remaining_time(self):
+        now = timezone.now().date()
+
+        if self.fatal_deadline:
+            delta = self.fatal_deadline - now
+
+            if delta.total_seconds() < 0:
+                return 'Prazo fatal já passou'
+            else:
+                days = delta.days
+                hours, remainder = divmod(delta.seconds, 3600)
+                minutes, _ = divmod(remainder, 60)
+                
+                return f'{days} dia(s) :{hours} hora(s) :{minutes} minuto(s)'
+        else:
+            return None
+
+    def save(self, *args, **kwargs):
+        self.judicial_determination = self.remaining_time()
+        super().save(*args, **kwargs)
 
 class RioDeJaneiro(Triage):
     cpf_cnpj = models.CharField(

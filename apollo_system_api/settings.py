@@ -1,19 +1,26 @@
 from pathlib import Path
 from datetime import timedelta
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR.parent / 'data' / 'web'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=onshoa#s%x7ydxyjkvq-6(qi@n^sye&hx4c&r@jdp0391x%+5'
+SECRET_KEY = os.getenv('SECRET_KEY', 'apollo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.13.99', '192.168.0.138', '172.20.240.1', '179.156.170.171', '201.48.109.196', 'apollo1.loca.lt', 'apollo.loca.lt']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.13.99', '192.168.0.138', '172.20.240.1', '179.156.170.171', '201.48.109.196', '191.247.11.155', 'apollo2.loca.lt', 'apollo1.loca.lt', 'apollo.loca.lt']
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',')
+    if h.strip()
+]
 
 # Application definition
 
@@ -46,7 +53,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://192.168.13.126:3000",
     "http://192.168.121.1:3000",
-    "http://192.168.13.57:3000",
+    "http://192.168.13.69:3000",
     "http://192.168.13.131:3000"
 ]
 
@@ -96,12 +103,12 @@ WSGI_APPLICATION = 'apollo_system_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'apollo_api',
-        'USER': 'postgres',
-        'PASSWORD': 'math@law',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
@@ -140,7 +147,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = DATA_DIR / 'static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = DATA_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
